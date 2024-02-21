@@ -1,26 +1,31 @@
-import React, { useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
-import { wonState, dollorState } from './atoms';
-function App() {
-  const [won, setWon] = useRecoilState(wonState);
-  const [dollor, setDollor] = useRecoilState(dollorState);
-  const wonOnChange = (e) => {
-    setWon(Number(e.target.value));
-  };
+import React, { useReducer } from 'react';
 
-  const dollorOnChange = (e) => {
-    setDollor(Number(e.target.value));
-  };
-  console.log(won);
+function App() {
+  function countReducer(prevCount, action) {
+    if (action === 'UP') {
+      return prevCount + 1;
+    } else if (action === 'DOWN') {
+      return prevCount - 1;
+    } else if (action === 'RESET') return 0;
+  }
+  const [count, countDispatch] = useReducer(countReducer, 0);
+
+  function up() {
+    countDispatch('UP');
+  }
+  function down() {
+    countDispatch('DOWN');
+  }
+  function reset() {
+    countDispatch('RESET');
+  }
+
   return (
     <>
-      <input
-        value={won}
-        onChange={wonOnChange}
-        type='number'
-        placeholder='Won'
-      />
-      <input value={dollor} onChange={dollorOnChange} type='number' />
+      <input type='button' value='-' onClick={down} />
+      <input type='button' value='0' onClick={reset} />
+      <input type='button' value='+' onClick={up} />
+      <span>{count}</span>
     </>
   );
 }
